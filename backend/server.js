@@ -10,16 +10,13 @@ const authenticateToken = require('./middleware/authMiddleware')
 const checkRole = require('./middleware/roleMiddleware')
 
 const adminRoutes = require('./routes/adminRoutes')
-
 const userRoutes = require('./routes/userRoutes')
-
 const ownerRoutes = require('./routes/ownerRoutes')
-
 
 const app = express()
 
 app.use(cors({
-    origin: 'http://localhost:5173'
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173'
 }))
 
 app.use(express.json())
@@ -48,7 +45,6 @@ app.get('/api/health', async (req, res) => {
     }
 })
 
-
 app.get('/api/profile', authenticateToken, (req, res) => {
     res.status(200).json({
         success: true,
@@ -65,11 +61,8 @@ app.get('/api/admin/test', authenticateToken, checkRole('ADMIN'), (req, res) => 
 })
 
 app.use('/api/admin', adminRoutes)
-
 app.use('/api/user', userRoutes)
-
 app.use('/api/owner', ownerRoutes)
-
 
 const PORT = process.env.PORT || 5000
 
